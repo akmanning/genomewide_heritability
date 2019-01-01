@@ -22,7 +22,7 @@ RUN wget $URL/$ZIP -O $DST/$ZIP && \
     rm $DST/$ZIP
 
 ENV PLINKZIP=plink_linux_x86_64_20181202.zip
-ENV PLINKURL=http://s3.amazonaws.com/plink1-assets/
+ENV PLINKURL=http://s3.amazonaws.com/plink1-assets
 
 RUN wget $PLINKURL/$PLINKZIP -O $DST/$PLINKZIP && \
     unzip $DST/$PLINKZIP -d $DST && \
