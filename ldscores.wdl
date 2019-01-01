@@ -13,7 +13,7 @@ task ldscores {
 		/home/biodocker/bin/gcta_1.91.7beta/gcta64 --bfile {$label} --ld-score-region 200 --out {$label}_segment --threads {$threads}
 	}
 	runtime {
-		docker: "akmanning/genomewide_heritability:latest"
+		docker: "akmanning/genomewide_heritability:gcta"
 		disks: "local-disk ${disksize} SSD"
 		memory: "${memory}G"
 	}
