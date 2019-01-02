@@ -5,13 +5,13 @@ task ldscores {
 	Float? memory
 	Int? disksize
 	
-	command {
-		mv {$label}.vcf.bgz {$label}.vcf.gz
-		/home/biodocker/bin/plink --vcf {$label}.vcf.gz --make-bed --out {$label}
-		cp {$label}.bim {$label}_old.bim
-		awk '{b="chr"$1"-"$4"-"$5"-"$6; print $1"\t"b"\t"$3"\t"$4"\t"$5"\t"$6;}' {$label}_old.bim > {$label}.bim
-		/home/biodocker/bin/gcta_1.91.7beta/gcta64 --bfile {$label} --ld-score-region 200 --out {$label}_segment --threads {$threads}
-	}
+	command <<<
+		mv ${label}.vcf.bgz ${label}.vcf.gz
+		/home/biodocker/bin/plink --vcf ${label}.vcf.gz --make-bed --out ${label}
+		cp ${label}.bim ${label}_old.bim
+		awk '{b="chr"$1"-"$4"-"$5"-"$6; print $1"\t"b"\t"$3"\t"$4"\t"$5"\t"$6;}' ${label}_old.bim > ${label}.bim
+		/home/biodocker/bin/gcta_1.91.7beta/gcta64 --bfile ${label} --ld-score-region 200 --out ${label}_segment --threads ${threads}
+	>>>
 	runtime {
 		docker: "akmanning/genomewide_heritability:gcta"
 		disks: "local-disk ${disksize} SSD"
