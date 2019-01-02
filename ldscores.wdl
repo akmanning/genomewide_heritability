@@ -6,7 +6,7 @@ task ldscores {
 	Int? disksize
 	
 	command <<<
-		mv ${label}.vcf.bgz ${label}.vcf.gz
+		mv ${vcf} ${label}.vcf.gz
 		/home/biodocker/bin/plink --vcf ${label}.vcf.gz --make-bed --out ${label}
 		cp ${label}.bim ${label}_old.bim
 		awk '{b="chr"$1"-"$4"-"$5"-"$6; print $1"\t"b"\t"$3"\t"$4"\t"$5"\t"$6;}' ${label}_old.bim > ${label}.bim

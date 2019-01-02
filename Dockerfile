@@ -28,12 +28,6 @@ RUN wget $PLINKURL/$PLINKZIP -O $DST/$PLINKZIP && \
     unzip $DST/$PLINKZIP -d $DST && \
     rm $DST/$PLINKZIP
 
-# CHANGE WORKDIR TO /DATA
-WORKDIR /data
-
-# DEFINE DEFAULT COMMAND
-CMD ["gcta64"]
-
 ##################### INSTALLATION END #####################
 
 # File Author / Maintainer
