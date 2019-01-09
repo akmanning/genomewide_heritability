@@ -14,7 +14,7 @@ task ldms {
 	
 	command <<<
 			# Generate SNP lists
-			R --vanilla --args ${label} ${ldscore} < /genomewide_heritability/GCTA-LDMS.R
+			R --vanilla --args ${label} ${ldscore} < /home/biodocker/genomewide_heritability/GCTA-LDMS.R
 
 			# Make GRM based on each snp list
 			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile ${label} --extract score.snp_group1_maf0.05.txt --make-grm --out score.snp_group1_maf0.05

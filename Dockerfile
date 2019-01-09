@@ -28,6 +28,12 @@ RUN wget $PLINKURL/$PLINKZIP -O $DST/$PLINKZIP && \
     unzip $DST/$PLINKZIP -d $DST && \
     rm $DST/$PLINKZIP
 
+##### Scripts used in gcta analyses
+RUN cd /home/biodocker/ && \
+	git clone https://github.com/akmanning/genomewide_heritability.git && \
+	cd genomewide_heritability && \
+	git pull origin master
+
 ##################### INSTALLATION END #####################
 
 # File Author / Maintainer
