@@ -1,8 +1,29 @@
+task snplist {
+	File ldscore
+	command {
+			ls -lh
+			R --vanilla -e "source('https://raw.githubusercontent.com/akmanning/genomewide_heritability/master/GCTA-LDMS.R')" --args ${ldscore} 
+			tar czvf score.snp.tar.gz score.snp*
+			ls -lh
+	}
+	output { 
+		File score_snp = "score.snp.tar.gz"
+		File multi_grms = "snp_groups_multGRMs.txt"
+	
+	}
+	runtime {
+		docker: "r-base:latest"
+		disks: "local-disk 50 SSD"
+		memory: "10G"
+	}
+}
+
 task ldms {
 	File bed
 	File bim
 	File fam
-	Fire ldscore
+	File score_snp
+	File multi_grms
 	File outcome
 	File covar
 	File qcovar
@@ -13,29 +34,33 @@ task ldms {
 	Int? disksize
 	
 	command <<<
-			# Generate SNP lists
-			R --vanilla --args ${label} ${ldscore} < /home/biodocker/genomewide_heritability/GCTA-LDMS.R
-
+			ls -lh
+			
+			tar xzvf ${score_snp}
+			ls -lh
+			
 			# Make GRM based on each snp list
-			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile ${label} --extract score.snp_group1_maf0.05.txt --make-grm --out score.snp_group1_maf0.05
-			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile ${label} --extract score.snp_group2_maf0.05.txt --make-grm --out score.snp_group2_maf0.05
-			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile ${label} --extract score.snp_group3_maf0.05.txt --make-grm --out score.snp_group3_maf0.05
-			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile ${label} --extract score.snp_group4_maf0.05.txt --make-grm --out score.snp_group4_maf0.05
+			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile /cromwell_root/${label} --extract score.snp_group1_maf0.05.txt --make-grm --out score.snp_group1_maf0.05
+			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile /cromwell_root/${label} --extract score.snp_group2_maf0.05.txt --make-grm --out score.snp_group2_maf0.05
+			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile /cromwell_root/${label} --extract score.snp_group3_maf0.05.txt --make-grm --out score.snp_group3_maf0.05
+			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile /cromwell_root/${label} --extract score.snp_group4_maf0.05.txt --make-grm --out score.snp_group4_maf0.05
 
-			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile ${label} --extract score.snp_group1_maf0.01.txt --make-grm --out score.snp_group1_maf0.01
-			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile ${label} --extract score.snp_group2_maf0.01.txt --make-grm --out score.snp_group2_maf0.01
-			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile ${label} --extract score.snp_group3_maf0.01.txt --make-grm --out score.snp_group3_maf0.01
-			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile ${label} --extract score.snp_group4_maf0.01.txt --make-grm --out score.snp_group4_maf0.01
+			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile /cromwell_root/${label} --extract score.snp_group1_maf0.01.txt --make-grm --out score.snp_group1_maf0.01
+			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile /cromwell_root/${label} --extract score.snp_group2_maf0.01.txt --make-grm --out score.snp_group2_maf0.01
+			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile /cromwell_root/${label} --extract score.snp_group3_maf0.01.txt --make-grm --out score.snp_group3_maf0.01
+			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile /cromwell_root/${label} --extract score.snp_group4_maf0.01.txt --make-grm --out score.snp_group4_maf0.01
 
-			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile ${label} --extract score.snp_group1_maflt0.01.txt --make-grm --out score.snp_group1_maflt0.01
-			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile ${label} --extract score.snp_group2_maflt0.01.txt --make-grm --out score.snp_group2_maflt0.01
-			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile ${label} --extract score.snp_group3_maflt0.01.txt --make-grm --out score.snp_group3_maflt0.01
-			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile ${label} --extract score.snp_group4_maflt0.01.txt --make-grm --out score.snp_group4_maflt0.01
-
+			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile /cromwell_root/${label} --extract score.snp_group1_maflt0.01.txt --make-grm --out score.snp_group1_maflt0.01
+			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile /cromwell_root/${label} --extract score.snp_group2_maflt0.01.txt --make-grm --out score.snp_group2_maflt0.01
+			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile /cromwell_root/${label} --extract score.snp_group3_maflt0.01.txt --make-grm --out score.snp_group3_maflt0.01
+			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile /cromwell_root/${label} --extract score.snp_group4_maflt0.01.txt --make-grm --out score.snp_group4_maflt0.01
+			ls -lh
 			# Run REML to get heritability of each GRM
-			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --reml --prevalence ${prevalence} --pheno ${outcome} --covar ${covar} --qcovar {$qcovar} --out ${label}_multGRMs  --mgrm snp_groups_multGRMs.txt --threads ${threads}
+			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --reml --prevalence ${prevalence} --pheno ${outcome} --covar ${covar} --qcovar {qcovar} --out multiGRMs  --mgrm ${multi_grms} --threads ${threads}
+			ls -lh
 
-			tar czvf ${label}.score.snp.tar.gz score.snp* 
+			tar czvf score.snp.tar.gz score.snp* 
+			ls -lh
 	>>>
 	runtime {
 		docker: "akmanning/genomewide_heritability:gcta"
@@ -43,10 +68,10 @@ task ldms {
 		memory: "${memory}G"
 	}
 	output { 
-		File score.snp = ${label}.score.snp.tar.gz
+		File grms = "score.snp.tar.gz"
 		
-		File out_reml_log = "${label}_multGRMs.log"
-		File out_reml_hsq = "${label}.hsq"
+		File out_reml_log = "multiGRMs.log"
+		File out_reml_hsq = "multiGRMs.hsq"
 		
 	}
 }
@@ -66,8 +91,11 @@ workflow w {
 	Float? memory
 	Int? disksize
 	
+	call snplist {
+		input: ldscore=ldscore
+	}
 	call ldms { 
-		input: label=this_label, bed=this_bed, bim=this_bim, fam=this_fam, ldscore=this_ldscore, outcome=this_outcome, covar=this_covar, qcovar=this_qcovar, prevalence=this_prevalence, memory=this_memory, disksize=this_disksize,threads=this_threads
+		input: label=sub(sub(bed,".bed",""),"gs://",""), bed=bed, bim=bim, fam=fam, score_snp=snplist.score_snp, multi_grms=snplist.multi_grms, outcome=outcome, covar=covar, qcovar=qcovar, prevalence=prevalence, memory=memory, disksize=disksize,threads=threads
 		}
 	
 }
