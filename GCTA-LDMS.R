@@ -1,7 +1,6 @@
 commandArgs(trailingOnly=TRUE)
 
-label <- commandArgs(trailingOnly=TRUE)[1]
-ld_scores_file <- commandArgs(trailingOnly=TRUE)[2]
+ld_scores_file <- commandArgs(trailingOnly=TRUE)[1]
 
 lds_seg = read.table(ld_scores_file,header=T,colClasses=c("character",rep("numeric",8)))
 quartiles=summary(lds_seg$ldscore_SNP)
