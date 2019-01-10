@@ -56,7 +56,7 @@ task ldms {
 			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile /cromwell_root/${label} --extract score.snp_group4_maflt0.01.txt --make-grm --out score.snp_group4_maflt0.01
 			ls -lh
 			# Run REML to get heritability of each GRM
-			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --reml --prevalence ${prevalence} --pheno ${outcome} --covar ${covar} --qcovar {qcovar} --out multiGRMs  --mgrm ${multi_grms} --threads ${threads}
+			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --reml --prevalence ${prevalence} --pheno ${outcome} --covar ${covar} --qcovar ${qcovar} --out multiGRMs  --mgrm ${multi_grms} --threads ${threads}
 			ls -lh
 
 			tar czvf score.snp.tar.gz score.snp* 
