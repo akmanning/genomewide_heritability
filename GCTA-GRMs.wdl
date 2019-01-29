@@ -11,9 +11,6 @@ task chrgrm {
 	Int? disksize
 	
 	command <<<
-			pwd
-			ls
-			ls /cromwell_root/
             echo ${plinklabel}
             ls -l ${plinklabel}*
             head ${plinklabel}.bim
@@ -46,9 +43,6 @@ task grm {
 	Int? disksize
 	
 	command <<<
-		pwd
-		ls
-		ls /cromwell_root/
 		/home/biodocker/bin/gcta_1.91.7beta/gcta64 --mgrm ${write_lines(chrLabels)} --threads ${threads} --make-grm-bin --out ${analysisLabel}	
 		ls
 	>>>
@@ -64,6 +58,22 @@ task grm {
 		File grmlog = "${analysisLabel}.log"
 		
 		
+	}
+}
+
+task filepath {
+	String chrLabel
+
+	command {
+		echo ${chrLabel}
+	}
+
+	runtime {
+		docker: "tmajarian/alpine_wget@sha256:f3402d7cb7c5ea864044b91cfbdea20ebe98fc1536292be657e05056dbe5e3a4"
+	}
+
+	output {
+		String chrLabelout = "${chrLabel}"
 	}
 }
 
@@ -87,8 +97,13 @@ workflow w {
 			input: plinklabel=sub(sub(bedFiles[chr],".bed",""),"gs://",""), label=chrLabels[chr], bed=bedFiles[chr], bim=bimFiles[chr], fam=famFiles[chr], variantlist=variantlist, memory=memory, disksize=disksize,threads=threads
 		}
 	}
+
+	scatter (grmbin in chrgrm.grmbin) {
+    	call filepath { input: chrLabel =  sub(sub(grmbin,".bed",""),"gs://","") }
+    }
+  
 	call grm {
-		input: analysisLabel=analysisLabel, chrLabels=chrLabels, grmids=chrgrm.grmid, grmsnps=chrgrm.grmsnp, grmbins=chrgrm.grmbin, memory=memory, disksize=disksize,threads=threads
+		input: analysisLabel=analysisLabel, chrLabels=filepath.chrLabelout, grmids=chrgrm.grmid, grmsnps=chrgrm.grmsnp, grmbins=chrgrm.grmbin, memory=memory, disksize=disksize,threads=threads
 	}
 	
 }
