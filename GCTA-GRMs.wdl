@@ -99,7 +99,7 @@ workflow w {
 	}
 
 	scatter (grmbin in chrgrm.grmbin) {
-    	call filepath { input: chrLabel =  sub(sub(grmbin,".bed",""),"gs://","") }
+    	call filepath { input: chrLabel =  sub(sub(grmbin,".grm.id",""),"gs://","") }
     }
   
 	call grm {
