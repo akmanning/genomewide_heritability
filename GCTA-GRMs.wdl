@@ -81,8 +81,6 @@ workflow w {
 	Array[File] famFiles
 	Array[String] chrLabels
 	File variantlist
-	String analysisLabel
-	String plinklabel
 	Int? threads = 6
 	Float? memory
 	Int? disksize
@@ -100,7 +98,7 @@ workflow w {
     }
   
 	call grm {
-		input: analysisLabel=analysisLabel, chrLabels=filepath.chrLabelout, grmids=chrgrm.grmid, grmsnps=chrgrm.grmsnp, grmbins=chrgrm.grmbin, memory=memory, disksize=disksize,threads=threads
+		input: analysisLabel=sub(basename(variantlist,".txt"),"snp.list.",""), chrLabels=filepath.chrLabelout, grmids=chrgrm.grmid, grmsnps=chrgrm.grmsnp, grmbins=chrgrm.grmbin, memory=memory, disksize=disksize,threads=threads
 	}
 	
 }
