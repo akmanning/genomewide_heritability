@@ -1,4 +1,3 @@
-
 task chrgrm {
 	File bed
 	File bim
@@ -17,6 +16,7 @@ task chrgrm {
 			# Make GRM based on snp list
 			/home/biodocker/bin/gcta_1.91.7beta/gcta64 --threads ${threads} --bfile ${plinklabel} --extract ${variantlist} --make-grm --out ${label}
 			ls
+            
 	>>>
 	runtime {
 		docker: "akmanning/genomewide_heritability:gcta"
@@ -25,8 +25,8 @@ task chrgrm {
 	}
 	output { 
 		File grmid = "${label}.grm.id"
-		File grmsnp = "${label}.grm.id"
-		File grmbin = "${label}.grm.id"
+		File grmsnp = "${label}.grm.N.bin"
+		File grmbin = "${label}.grm.bin"
 		File grmlog = "${label}.log"
 
 	}
@@ -45,6 +45,7 @@ task grm {
 	command <<<
 		/home/biodocker/bin/gcta_1.91.7beta/gcta64 --mgrm ${write_lines(chrLabels)} --threads ${threads} --make-grm-bin --out ${analysisLabel}	
 		ls
+        tar -czf ${analysisLabel}.tar.gz ${analysisLabel}.* 
 	>>>
 	runtime {
 		docker: "akmanning/genomewide_heritability:gcta"
@@ -52,11 +53,7 @@ task grm {
 		memory: "${memory}G"
 	}
 	output { 
-		File grmid = "${analysisLabel}.grm.id"
-		File grmsnp = "${analysisLabel}.grm.id"
-		File grmbin = "${analysisLabel}.grm.id"
-		File grmlog = "${analysisLabel}.log"
-		
+		File grmtar = "${analysisLabel}.tar.gz"
 		
 	}
 }
@@ -98,8 +95,8 @@ workflow w {
 		}
 	}
 
-	scatter (grmbin in chrgrm.grmbin) {
-    	call filepath { input: chrLabel =  sub(sub(grmbin,".grm.id",""),"gs://","") }
+	scatter (grmid in chrgrm.grmid) {
+    	call filepath { input: chrLabel =  sub(sub(grmid,".grm.id",""),"gs://","") }
     }
   
 	call grm {
