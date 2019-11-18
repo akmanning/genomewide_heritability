@@ -45,7 +45,8 @@ task grm {
 	command <<<
 		/home/biodocker/bin/gcta_1.91.7beta/gcta64 --mgrm ${write_lines(chrLabels)} --threads ${threads} --make-grm-bin --out ${analysisLabel}	
 		ls
-        tar -czf ${analysisLabel}.tar.gz ${analysisLabel}.* 
+        	tar -czf ${analysisLabel}.tar.gz ${analysisLabel}.*
+		rm ${analysisLabel}.grm.id ${analysisLabel}.grm.N.bin ${analysisLabel}.grm.bin 
 	>>>
 	runtime {
 		docker: "akmanning/genomewide_heritability:gcta"
