@@ -1,9 +1,10 @@
 ############################# Dockerfile ####################################
-FROM biocontainers/biocontainers:v1.0.0_cv4
+FROM biocontainers/biocontainers:v1.2.0_cv1
+
 
 ######################## METADATA ###########################################
 
-LABEL base_image="biocontainers:v1.0.0_cv4"
+LABEL base_image="biocontainers:v1.2.0_cv1"
 LABEL version="3"
 LABEL software="gcta"
 LABEL software.version="gcta_1.93.2"
