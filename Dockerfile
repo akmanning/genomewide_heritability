@@ -4,16 +4,16 @@ FROM biocontainers/biocontainers:v1.0.0_cv4
 ######################## METADATA ###########################################
 
 LABEL base_image="biocontainers:v1.0.0_cv4"
-LABEL version="2"
+LABEL version="3"
 LABEL software="gcta"
-LABEL software.version="1.91.7beta"
+LABEL software.version="gcta_1.93.2"
 LABEL about.summary="A tool for Genome-wide Complex Trait Analysis includes plink "
 LABEL about.tags="Genomics"
-LABEL about.provides="gcta 1.91.7beta"
+LABEL about.provides="gcta 1.93.2"
 
 ################## BEGIN INSTALLATION ######################
 
-ENV ZIP=gcta_1.91.7beta.zip
+ENV ZIP=gcta_1.93.2_src.zip
 ENV URL=https://cnsgenomics.com/software/gcta/
 ENV DST=/home/biodocker/bin
 
