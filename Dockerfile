@@ -14,9 +14,11 @@ LABEL about.provides="gcta 1.93.2"
 
 ################## BEGIN INSTALLATION ######################
 
-ENV ZIP=gcta_1.93.2_src.zip
-ENV URL=https://cnsgenomics.com/software/gcta/
+#https://cnsgenomics.com/software/gcta/bin/gcta_1.93.2beta.zip
+ENV ZIP=gcta_1.93.2beta.zip
+ENV URL=https://cnsgenomics.com/software/gcta/bin/
 ENV DST=/home/biodocker/bin
+
 
 RUN wget $URL/$ZIP -O $DST/$ZIP && \
     unzip $DST/$ZIP -d $DST && \
